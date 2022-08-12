@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {create} from "domain";
+import {prisma} from "../utils/prisma";
 
 interface Obj {
     req: NextApiRequest,
@@ -7,7 +7,7 @@ interface Obj {
 }
 
 export function createContext({req, res}: Obj) {
-    return {req, res}
+    return {req, res, prisma}
 }
 
 export type Context = ReturnType<typeof createContext>
