@@ -27,18 +27,19 @@ export default function Register() {
                         {error && error.message}
                         <div className='text-lg mb-4'>Register</div>
                         <input
+                            className='dark:text-zinc-900 text-zinc-200'
                             type="email"
                             placeholder='mark.zackerberg@facebook.com'
                             {...register('email')}
                         />
                         <br/>
                         <input
-                            className='mb-6'
+                            className='dark:text-zinc-900 text-zinc-200 mb-6'
                             type="text"
                             placeholder='mark'
                             {...register('name')}
                         />
-                        <button className='flex justify-center items-center w-full py-2 bg-green-400 dark:text-zinc-900 text-zinc-200 rounded-md mb-4' type={'submit'}>Register</button>
+                        <button className='flex justify-center items-center w-full py-2 bg-green-400 dark:text-zinc-900 text-zinc-200 rounded-md mb-4 hover:bg-green-500 transition' type={'submit'}>Register</button>
                     </form>
 
                     <Link href='/login'>

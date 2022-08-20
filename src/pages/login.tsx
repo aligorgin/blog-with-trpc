@@ -1,35 +1,49 @@
 import Link from 'next/link'
 import {useForm} from "react-hook-form";
-import {trpc} from "../utils/trpc";
 import {CreateUserInput} from "../schema/user.schema";
-import {userRouter} from "../server/route/user.router";
+import {trpc} from "../utils/trpc";
+import {useRouter} from "next/router";
 
 export default function Register() {
     const {handleSubmit, register} = useForm<CreateUserInput>();
-    const router = userRouter();
+    const router = useRouter();
 
     // const {mutate, error} = trpc.useMutation(['users.register-user'], {
     //     onSuccess: () => {
     //         router.push('/login')
     //     }
     // })
-
+    //
     function onSubmit(values: CreateUserInput) {
         // mutate(values)
     }
 
     return (
         <>
-            <form className='h-screen w-full grid justify-items-center border-2 border-y-zinc-500'
-                  onSubmit={handleSubmit(onSubmit)} action="">
-                {/*{error && error.message}*/}
-                <div className='p-4 text-lg'>Login</div>
-                <input type="email" placeholder='mark.zackerberg@facebook.com' {...register('email')}/>
-            </form>
+            <div className='w-full flex justify-start items-center flex-col mt-16'>
+                <div className='border-2 dark:border-zinc-200 border-zinc-900 p-4 rounded-md'>
+                    <form className='flex flex-col  items-start'
+                          onSubmit={handleSubmit(onSubmit)}>
+                        {/*{error && error.message}*/}
+                        <div className='text-lg mb-4'>Login</div>
+                        <input
+                            className='dark:text-zinc-900 text-zinc-200'
+                            type="email"
+                            placeholder='mark.zackerberg@facebook.com'
+                            {...register('email')}
+                        />
+                        <br/>
+                        <button
+                            className='flex justify-center items-center w-full py-2 bg-green-400 dark:text-zinc-900 text-zinc-200 rounded-md mb-4 hover:bg-green-500 transition'
+                            type={'submit'}>Register
+                        </button>
+                    </form>
 
-            <Link href='/register'>
-                register
-            </Link>
+                    <Link href='/register'>
+                        <div className='text-blue-400 cursor-pointer'>Register</div>
+                    </Link>
+                </div>
+            </div>
         </>
     )
 }
