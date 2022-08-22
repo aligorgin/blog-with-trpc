@@ -17,3 +17,7 @@ export const requestOtpSchema = z.object({
     redirect:z.string().default('/')
 })
 export type requestOtpInput = z.TypeOf<typeof requestOtpSchema>
+
+export const verifyOtpSchema = z.object({
+    hash:z.string(),
+})

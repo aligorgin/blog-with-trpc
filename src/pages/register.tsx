@@ -4,7 +4,7 @@ import {CreateUserInput} from "../schema/user.schema";
 import {trpc} from "../utils/trpc";
 import {useRouter} from "next/router";
 
-export default function Register() {
+export default function RegisterPage() {
     const {handleSubmit, register} = useForm<CreateUserInput>();
     const router = useRouter();
 

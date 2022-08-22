@@ -1,9 +1,13 @@
 import {createRouter} from "../createRouter";
-import {createUserOutputSchema, createUserSchema, requestOtpSchema} from "../../schema/user.schema";
+import {createUserOutputSchema, createUserSchema, requestOtpSchema, verifyOtpSchema} from "../../schema/user.schema";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 import * as trpc from '@trpc/server';
 import {sendLoginEmail} from "../../utils/mailer";
-import {url} from '../../constants'
+import {baseUrl, url} from '../../constants'
+import {decode, encode} from "../../utils/base64";
+import {Simulate} from "react-dom/test-utils";
+import {signJwt} from "../../utils/jwt";
+import {serialize} from "cookie";
 
 export const userRouter = createRouter()
     .mutation('register-user', {
@@ -65,13 +69,56 @@ export const userRouter = createRouter()
                 }
             })
 
-            await sendLoginEmail({
-                token: '',
-                url: url,
+            sendLoginEmail({
+                token: encode(`${token.id}:${user.email}`),
+                url: baseUrl,
                 email: user.email
             })
 
             // send email to user
             return true
+        },
+    })
+    .query('verify-otp', {
+        input: verifyOtpSchema,
+        async resolve({input, ctx}) {
+            const decoded = decode(input.hash).split(':')
+            const [id, email] = decoded;
+
+            const token = await ctx.prisma.loginToken.findFirst({
+                where: {
+                    id,
+                    user: {
+                        email,
+                    }
+                },
+                include: {
+                    user: true,
+                }
+            })
+
+            if (!token) {
+                throw new trpc.TRPCError({
+                    code: 'FORBIDDEN',
+                    message: 'Invalid token'
+                })
+            }
+
+            const jwt = signJwt({
+                email: token.user.email,
+                id: token.user.id
+            })
+
+            ctx.res.setHeader('set-Cookie', serialize('token', jwt, {path: '/'}))
+
+            return {
+                redirect: token.redirect,
+            }
+
         }
+    })
+    .query('me', {
+        resolve({ ctx }) {
+            return ctx.user
+        },
     })
