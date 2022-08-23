@@ -13,8 +13,10 @@ import {UserContextProvider} from "../context/user.context";
 function MyApp({Component, pageProps}: AppProps) {
     const {data, error, isLoading} = trpc.useQuery(['users.me']);
     if (isLoading) {
-        return <>Loadiing user ...</>
+        return <div>Loading user ...</div>
     }
+
+    console.log(error);
 
 
     return (

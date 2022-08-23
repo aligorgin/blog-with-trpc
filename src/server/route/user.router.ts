@@ -54,7 +54,7 @@ export const userRouter = createRouter()
             if (!user) {
                 throw new trpc.TRPCError({
                     code: 'NOT_FOUND',
-                    message: 'User not fount'
+                    message: 'User not found'
                 })
             }
 
@@ -118,7 +118,7 @@ export const userRouter = createRouter()
         }
     })
     .query('me', {
-        resolve({ ctx }) {
+        resolve({ctx}) {
             return ctx.user
         },
     })
